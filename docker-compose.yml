@@ -1,0 +1,40 @@
+version: '3'
+
+name: bull-board
+services:
+  api:
+    container_name: dashboard-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 4000:4000
+      - 9229:9229 # debugger
+    environment:
+      REDIS_HOST: redis
+      QUEUE_PREFIX: bull
+      QUEUE_NAMES: |
+        ExampleBullMQ;
+        ExampleBull
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:6.2.3-alpine
+    ports:
+      - 6379:6379
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+
