@@ -1,4 +1,9 @@
-import { BullAdapter, createBullBoard, ExpressAdapter } from '@bull-board/express'
+import {
+  BullAdapter,
+  BullMQAdapter,
+  createBullBoard,
+  ExpressAdapter
+} from '@bull-board/express'
 import Queue3 from 'bull'
 import { ConnectionOptions, Queue as QueueMQ } from 'bullmq'
 import express from 'express'
@@ -11,27 +16,27 @@ const environments = {
   queueNames: process.env.QUEUE_NAMES || '',
   redisPort: parseInt(process.env.REDIS_PORT || '6379'),
   redisHost: process.env.REDIS_HOST || 'localhost',
-  redisUsername: process.env.REDIS_USERNAME,
-  redisPassword: process.env.REDIS_PASSWORD || '',
+  redisUsername: process.env.REDIS_USERNAME || 'default',
+  redisPassword: process.env.REDIS_PASSWORD || ''
 }
 
 const redisOptions: ConnectionOptions = {
   host: environments.redisHost,
   port: environments.redisPort,
   username: environments.redisUsername,
-  password: environments.redisPassword,
+  password: environments.redisPassword
 }
 
 const createQueue3 = (name: string) =>
   new Queue3(name, {
     redis: redisOptions,
-    prefix: environments.queuePrefix,
+    prefix: environments.queuePrefix
   })
 
 const createQueueMQ = (name: string) =>
   new QueueMQ(name, {
     connection: redisOptions,
-    prefix: environments.queuePrefix,
+    prefix: environments.queuePrefix
   })
 
 const run = async () => {
@@ -39,7 +44,9 @@ const run = async () => {
   console.log('Redis')
   console.log(`- redis://${environments.redisHost}:${environments.redisPort}`)
   console.log(`- Username: ${environments.redisUsername}`)
-  console.log(`- Password: ${environments.redisPassword && '******'}`)
+  console.log(
+    `- Password: ${environments.redisPassword ? '******' : '<empty>'}`
+  )
 
   console.log('Configs')
   console.log(`- Prefix: ${environments.queuePrefix}`)
@@ -78,20 +85,27 @@ const run = async () => {
     exampleBull.add({ title: req.query.title }, opts)
     exampleBullMq.add('Add', { title: req.query.title }, opts)
 
-    queueBullList.forEach((queue) => queue.add({ title: req.query.title }, opts))
-    queueBullMqList.forEach((queue) => queue.add('Add', { title: req.query.title }, opts))
+    queueBullList.forEach((queue) =>
+      queue.add({ title: req.query.title }, opts)
+    )
+    queueBullMqList.forEach((queue) =>
+      queue.add('Add', { title: req.query.title }, opts)
+    )
 
     res.json({
-      ok: true,
+      ok: true
     })
   })
 
   const serverAdapter: any = new ExpressAdapter()
+  serverAdapter.setBasePath('')
 
   const adaptersList: BaseAdapter[] = []
 
   queueBullList.forEach((queue) => adaptersList.push(new BullAdapter(queue)))
-  // queueBullMqList.forEach((queue) => adaptersList.push(new BullMQAdapter(queue)))
+  queueBullMqList.forEach((queue) =>
+    adaptersList.push(new BullMQAdapter(queue))
+  )
 
   createBullBoard({ queues: adaptersList, serverAdapter })
 
@@ -111,9 +125,13 @@ const run = async () => {
     console.log(`Make sure Redis is running on port ${environments.redisPort}`)
     console.log('')
     console.log('To populate the queue, run:')
-    console.log(`  curl http://localhost:${environments.port}/add?title=Example`)
+    console.log(
+      `  curl http://localhost:${environments.port}/add?title=Example`
+    )
     console.log('To populate the queue with custom options (opts), run:')
-    console.log(`  curl http://localhost:${environments.port}/add?title=Test&opts[delay]=10`)
+    console.log(
+      `  curl http://localhost:${environments.port}/add?title=Test&opts[delay]=10`
+    )
   })
 }
 

@@ -1,5 +1,5 @@
 # DEVELOPMENT
-FROM node:16.17-alpine AS development
+FROM node:18.12-alpine AS development
 
 WORKDIR /app/
 
@@ -12,7 +12,7 @@ COPY --chown=node:node . .
 USER node
 
 # BUILD
-FROM node:16.17-alpine AS build
+FROM node:18.12-alpine AS build
 
 WORKDIR /app/
 
@@ -30,7 +30,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 USER node
 
 # PRODUCTION
-FROM node:16.17-alpine AS production
+FROM node:18.12-alpine AS production
 
 WORKDIR /app/
 
