@@ -16,4 +16,9 @@
     "resolveJsonModule": true,
     "declaration": true
   },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+  ]
 }
