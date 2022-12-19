@@ -9,6 +9,7 @@ import { ConnectionOptions, Queue as QueueMQ } from 'bullmq'
 import express from 'express'
 import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import styles from 'ansis'
+import { splitQueueList } from './utils/split-queue-list/split-queue-list'
 
 const environments = {
   port: process.env.PORT || 4000,
@@ -57,10 +58,7 @@ const run = async () => {
   const queueBullList: Queue3.Queue<any>[] = []
   const queueBullMqList: QueueMQ<any, any, string>[] = []
 
-  const queuesList = environments.queueNames
-    .split(';')
-    .filter((el) => el.trim() !== '')
-    .map((el) => el.trim().replace('\n', ''))
+  const queuesList = splitQueueList(environments.queueNames)
 
   for await (const queueName of queuesList) {
     console.log(`Creating processor to queue: "${queueName}"`)

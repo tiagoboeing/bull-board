@@ -3,7 +3,7 @@ FROM node:18.12-alpine AS development
 
 WORKDIR /app/
 
-COPY --chown=node:node package*.json index.ts ./
+COPY --chown=node:node package*.json src/* ./
 
 RUN npm ci
 

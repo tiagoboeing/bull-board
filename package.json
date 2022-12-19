@@ -2,7 +2,7 @@
   "name": "@tiagoboeing/bull-board",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
+  "main": "index.js",
   "description": "Bull queue UI for inspecting jobs",
   "keywords": [
     "bull",
@@ -25,7 +25,7 @@
   "scripts": {
     "lint": "eslint \"./packages/**/*.ts*\"",
     "build": "tsc",
-    "start:dev": "ts-node-dev --rs index.ts",
+    "start:dev": "ts-node-dev --rs src/index.ts",
     "start:docker": "docker-compose up -d",
     "release": "release-it --only-version",
     "test": "jest"
