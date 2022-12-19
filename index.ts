@@ -121,7 +121,7 @@ const run = async () => {
 
   app.listen(environments.port, () => {
     console.log(`Running on ${environments.port}...`)
-    console.log(`For the UI, open http://localhost:${environments.port}/ui`)
+    console.log(`For the UI, open http://localhost:${environments.port}`)
     console.log(`Make sure Redis is running on port ${environments.redisPort}`)
     console.log('')
     console.log('To populate the queue, run:')
