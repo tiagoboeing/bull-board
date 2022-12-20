@@ -1,5 +1,18 @@
 
 
+### [1.0.1](https://github.com/tiagoboeing/bull-board/compare/v1.0.0...v1.0.1) (2022-12-20)
+
+
+### Bug Fixes
+
+* :construction_worker: Fixed name of build workflow ([6195e7e](https://github.com/tiagoboeing/bull-board/commit/6195e7ea726a6ab263eb9fe31f384f2c12d01f03))
+
+
+### Others
+
+* :construction_worker: Created action to build code on push ([bd06b6f](https://github.com/tiagoboeing/bull-board/commit/bd06b6fe83442a9641fb08a003aa4254a8f9ea56))
+* :memo: Breaking changes exclusive section on CHANGELOG.md ([afad36d](https://github.com/tiagoboeing/bull-board/commit/afad36d6c14c0dcbd8fe3b2e712d67880215081b))
+
 ## 1.0.0 (2022-12-20)
 
 
