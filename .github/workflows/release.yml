@@ -21,6 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: git config
+        run: |
+          git config user.name "Release Bot"
+          git config user.email "no-reply@tiagoboeing.com"
+
       - name: Extract branch name
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
 
