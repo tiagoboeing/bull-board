@@ -40,5 +40,5 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          tags: tiagoboeing/bull-board:${{ env.BRANCH_NAME }}-SNAPSHOT
+          tags: tiagoboeing/bull-board:${{ env.GENERATED_VERSION }}
           target: production
