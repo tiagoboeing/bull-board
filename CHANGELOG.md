@@ -1,5 +1,13 @@
 
 
+### [1.0.2](https://github.com/tiagoboeing/bull-board/compare/v1.0.1...v1.0.2) (2022-12-20)
+
+
+### Others
+
+* :construction_worker: Build workflow now runs tests and build too with Node ([76106a3](https://github.com/tiagoboeing/bull-board/commit/76106a30b60c768d36c4b878e4877cc27c94fba1))
+* :construction_worker: Updated Node version from `16` to `18` on GitHub release action ([6def9d3](https://github.com/tiagoboeing/bull-board/commit/6def9d32405bc8e48c580197dd23ace6686e79ec))
+
 ### [1.0.1](https://github.com/tiagoboeing/bull-board/compare/v1.0.0...v1.0.1) (2022-12-20)
 
 
