@@ -1,4 +1,4 @@
-name: Build and push snapshots
+name: Snapshot
 
 on:
   workflow_dispatch:
