@@ -1,5 +1,12 @@
 
 
+### [1.0.3-0](https://github.com/tiagoboeing/bull-board/compare/v1.0.2...v1.0.3-0) (2022-12-20)
+
+
+### Others
+
+* :construction_worker: Allow to generate pre-releases on CI ([71aa792](https://github.com/tiagoboeing/bull-board/commit/71aa792537c7510c3127c9115260c5720dc4c0aa))
+
 ### [1.0.2](https://github.com/tiagoboeing/bull-board/compare/v1.0.1...v1.0.2) (2022-12-20)
 
 
