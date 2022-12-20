@@ -34,7 +34,9 @@ jobs:
         run: |
           npm ci
           npm run release -- --dry-run ${{ inputs.version }}
-          cat version.json
+          JSON=$(cat version.json)
+          VERSION=fromJSON($JSON).version
+          echo version=${VERSION} >>$GITHUB_OUTPUT
 
       - run: echo ${{ steps.release.outputs.version }}
 
