@@ -45,11 +45,11 @@ jobs:
       - run: npm ci
 
       - name: Generate release
-        if: ${{ inputs.pre_release == 'false' }}
+        if: !inputs.pre_release
         run: npm run release -- --ci ${{ inputs.version }}
 
       - name: Generate pre-release
-        if: ${{ inputs.pre_release == 'true' }}
+        if: inputs.pre_release
         run: npm run release -- --ci pre${{ inputs.version }}
 
       - name: Get generated version
