@@ -25,7 +25,7 @@ jobs:
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
 
       - name: Release It
-        id: release
+        id: release-it
         uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -44,5 +44,5 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          tags: tiagoboeing/bull-board:${{ steps.release.outputs.version }}
+          tags: tiagoboeing/bull-board:${{ env.GENERATED_VERSION }}
           target: production
