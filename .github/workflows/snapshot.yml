@@ -20,5 +20,5 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          tags: tiagoboeing/bull-board:${{ GITHUB_REF_NAME }}-SNAPSHOT
+          tags: tiagoboeing/bull-board:${{ github.ref_name }}-SNAPSHOT
           target: production
