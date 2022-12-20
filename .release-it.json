@@ -10,6 +10,10 @@
         "name": "conventionalcommits",
         "types": [
           {
+            "type": "break",
+            "section": "Breaking Changes"
+          },
+          {
             "type": "feat",
             "section": "Features"
           },
