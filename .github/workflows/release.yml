@@ -36,7 +36,7 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm run release -- ${{ inputs.version }}
+      - run: npm run release -- --ci ${{ inputs.version }}
 
       - name: Get generated version
         id: get_version
@@ -57,5 +57,5 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          tags: tiagoboeing/bull-board:${{ env.GENERATED_VERSION }}
+          tags: tiagoboeing/bull-board:${{ steps.get_version.outputs.prop }}
           target: production
