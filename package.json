@@ -93,6 +93,7 @@
         "npm run build"
       ],
       "after:release": [
+        "echo version=${version} >>$GITHUB_OUTPUT",
         "echo Successfully released ${name} v${version} to ${repo.repository}."
       ]
     },
