@@ -46,7 +46,8 @@
     "after:bump": ["npm run build"]
   },
   "github": {
-    "release": true
+    "release": true,
+    "releaseName": "v${version}"
   },
   "npm": false
 }
