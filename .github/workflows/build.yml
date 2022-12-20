@@ -1,0 +1,17 @@
+name: Build and push snapshots
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v3.2.0
+        with:
+          push: false
+          target: production
