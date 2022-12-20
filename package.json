@@ -78,7 +78,8 @@
   "release-it": {
     "plugins": {
       "@release-it/bumper": {
-        "out": "version.json"
+        "in": "package.json",
+        "out": "package.json"
       }
     },
     "git": {

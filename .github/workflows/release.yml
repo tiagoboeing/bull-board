@@ -42,7 +42,7 @@ jobs:
         id: get_version
         uses: notiz-dev/github-action-json-property@release
         with:
-          path: "version.json"
+          path: "package.json"
           prop_path: "version"
 
       - run: echo ${{ steps.get_version.outputs.prop }}
