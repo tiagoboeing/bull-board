@@ -24,12 +24,13 @@ jobs:
       - name: Extract branch name
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
 
-      - uses: actions/setup-node@v3
+      - name: Release
         id: release
+        uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
-      - run: >-
+        run: |
+          npm ci
           npm run release -- --dry-run ${{ inputs.version }}
           JSON=$(cat ./version.json)
           echo version=${JSON} >>$GITHUB_OUTPUT
