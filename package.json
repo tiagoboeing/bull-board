@@ -87,10 +87,7 @@
         "npx auto-changelog -p",
         "npm run build"
       ],
-      "after:release": [
-        "export GENERATED_VERSION=${version}",
-        "echo Successfully released ${name} v${version} to ${repo.repository}."
-      ]
+      "after:release": "export GENERATED_VERSION=${version}"
     },
     "github": {
       "release": true
