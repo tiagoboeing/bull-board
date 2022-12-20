@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           npm ci
-          npm run release -- --dry-run ${{ inputs.version }}
+          npm run release -- ${{ inputs.version }}
           JSON=$(cat version.json)
           VERSION=fromJSON($JSON).version
           echo version=${VERSION} >>$GITHUB_OUTPUT
