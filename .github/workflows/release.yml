@@ -30,6 +30,10 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm run release -- --dry-run ${{ inputs.version }}
+      - run: |
+          JSON=$(cat ./version.json)
+          echo version=${JSON} >>$GITHUB_OUTPUT
+
       - run: echo ${{ steps.release.outputs.version }}
 
       - name: Login to Docker Hub
