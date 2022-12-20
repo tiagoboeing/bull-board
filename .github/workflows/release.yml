@@ -15,7 +15,7 @@ on:
 concurrency: release-${{ inputs.version }}
 
 jobs:
-  build-push:
+  create-release:
     runs-on: ubuntu-latest
 
     steps:
