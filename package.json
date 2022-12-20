@@ -23,7 +23,7 @@
   "license": "MIT",
   "author": "Tiago Boeing <contato@tiagoboeing.com>",
   "scripts": {
-    "lint": "eslint \"./packages/**/*.ts*\"",
+    "lint": "eslint \"./**/*.ts*\"",
     "build": "tsc",
     "start:dev": "ts-node-dev --rs src/index.ts",
     "start:docker": "docker-compose up -d",
