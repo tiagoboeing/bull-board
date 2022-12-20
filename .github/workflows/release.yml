@@ -8,9 +8,14 @@ on:
         type: choice
         required: true
         options:
-          - major
-          - minor
           - patch
+          - minor
+          - major
+      pre_release:
+        description: "Is this a pre-release?"
+        type: boolean
+        required: true
+        default: false
 
 concurrency: release-${{ inputs.version }}
 
@@ -38,7 +43,14 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
-      - run: npm run release -- --ci ${{ inputs.version }}
+
+      - name: Generate release
+        if: ${{ inputs.pre_release == 'false' }}
+        run: npm run release -- --ci ${{ inputs.version }}
+
+      - name: Generate pre-release
+        if: ${{ inputs.pre_release == 'true' }}
+        run: npm run release -- --ci pre${{ inputs.version }}
 
       - name: Get generated version
         id: get_version
@@ -57,5 +69,5 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           push: true
-          tags: tiagoboeing/bull-board:${{ steps.get_version.outputs.prop }}
+          tags: tiagoboeing/bull-board:${{ steps.get_version.outputs.prop }},tiagoboeing/bull-board:latest
           target: production
