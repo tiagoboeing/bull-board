@@ -85,7 +85,10 @@
       ],
       "after:bump": [
         "npx auto-changelog -p",
-        "yarn build"
+        "npm run build"
+      ],
+      "after:release": [
+        "git push --tags"
       ]
     },
     "github": {
