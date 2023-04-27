@@ -1,5 +1,12 @@
 
 
+## [1.1.0-0](https://github.com/tiagoboeing/bull-board/compare/v1.0.3-0...v1.1.0-0) (2023-04-27)
+
+
+### Features
+
+* :sparkles: Created environment variable `BASE_PATH` to work when using subpaths ([#2](https://github.com/tiagoboeing/bull-board/issues/2)) ([c236a53](https://github.com/tiagoboeing/bull-board/commit/c236a53011d69f5a9eaaea4d824c191d5ea9422e))
+
 ### [1.0.3-0](https://github.com/tiagoboeing/bull-board/compare/v1.0.2...v1.0.3-0) (2022-12-20)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@tiagoboeing/bull-board",
-  "version": "1.0.3-0",
+  "version": "1.1.0-0",
   "private": true,
   "main": "index.js",
   "description": "Bull queue UI for inspecting jobs",
