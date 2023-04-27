@@ -10,6 +10,7 @@ import express from 'express'
 import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import styles from 'ansis'
 import { splitQueueList } from './utils/split-queue-list/split-queue-list'
+import { handleBasePath } from './utils/base-path/base-path'
 
 const environments = {
   port: process.env.PORT || 4000,
@@ -18,7 +19,8 @@ const environments = {
   redisPort: parseInt(process.env.REDIS_PORT || '6379'),
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisUsername: process.env.REDIS_USERNAME || 'default',
-  redisPassword: process.env.REDIS_PASSWORD || ''
+  redisPassword: process.env.REDIS_PASSWORD || '',
+  basePath: process.env.BASE_PATH || '/'
 }
 
 const redisOptions: ConnectionOptions = {
@@ -95,8 +97,10 @@ const run = async () => {
     })
   })
 
+  const basePath = handleBasePath(environments.basePath)
+
   const serverAdapter: any = new ExpressAdapter()
-  serverAdapter.setBasePath('/bull-board')
+  serverAdapter.setBasePath(basePath)
 
   const adaptersList: BaseAdapter[] = []
 
