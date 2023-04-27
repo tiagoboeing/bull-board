@@ -96,7 +96,7 @@ const run = async () => {
   })
 
   const serverAdapter: any = new ExpressAdapter()
-  serverAdapter.setBasePath('')
+  serverAdapter.setBasePath('/bull-board')
 
   const adaptersList: BaseAdapter[] = []
 
