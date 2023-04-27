@@ -77,6 +77,10 @@ docker run \
 
 > Check if Redis is Running and exposing ports!
 
+## Available variables
+
+See this `const` with [all available environments](https://github.com/tiagoboeing/bull-board/blob/1895a9c0b201d56d17ae2864cfcc0810a9b25dd3/src/index.ts#L15).
+
 ## Developing
 
 This project requires that you have a Redis instance running (you can simply run the `docker-compose.yml` to start the stack, use `npm run start:docker`).

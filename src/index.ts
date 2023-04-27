@@ -10,6 +10,8 @@ import express from 'express'
 import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import styles from 'ansis'
 import { splitQueueList } from './utils/split-queue-list/split-queue-list'
+import { handleBasePath } from './utils/base-path/base-path'
+import morgan from 'morgan'
 
 const environments = {
   port: process.env.PORT || 4000,
@@ -18,7 +20,8 @@ const environments = {
   redisPort: parseInt(process.env.REDIS_PORT || '6379'),
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisUsername: process.env.REDIS_USERNAME || 'default',
-  redisPassword: process.env.REDIS_PASSWORD || ''
+  redisPassword: process.env.REDIS_PASSWORD || '',
+  basePath: process.env.BASE_PATH || '/'
 }
 
 const redisOptions: ConnectionOptions = {
@@ -50,6 +53,7 @@ const run = async () => {
   )
 
   console.log('Configs')
+  console.log(`- Api base path: ${environments.basePath}`)
   console.log(`- Prefix: ${environments.queuePrefix}`)
   console.log(`- Queues: ${environments.queueNames}`)
 
@@ -95,8 +99,11 @@ const run = async () => {
     })
   })
 
+  const basePath = handleBasePath(environments.basePath)
+  console.log(`Base path: ${basePath}`)
+
   const serverAdapter: any = new ExpressAdapter()
-  serverAdapter.setBasePath('')
+  serverAdapter.setBasePath(basePath)
 
   const adaptersList: BaseAdapter[] = []
 
@@ -115,7 +122,7 @@ const run = async () => {
   console.log(`${queueBullMqList.map((queue) => `- ${queue.name}`).join('\n')}`)
   console.log('')
 
-  app.use('/', serverAdapter.getRouter())
+  app.use('/', morgan('short'), serverAdapter.getRouter())
 
   app.listen(environments.port, () => {
     console.log(`Running on ${environments.port}...`)
