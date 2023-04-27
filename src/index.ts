@@ -11,6 +11,7 @@ import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import styles from 'ansis'
 import { splitQueueList } from './utils/split-queue-list/split-queue-list'
 import { handleBasePath } from './utils/base-path/base-path'
+import morgan from 'morgan'
 
 const environments = {
   port: process.env.PORT || 4000,
@@ -20,7 +21,7 @@ const environments = {
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisUsername: process.env.REDIS_USERNAME || 'default',
   redisPassword: process.env.REDIS_PASSWORD || '',
-  basePath: process.env.BASE_PATH || '/'
+  apiBasePath: process.env.API_BASE_PATH || '/'
 }
 
 const redisOptions: ConnectionOptions = {
@@ -97,7 +98,7 @@ const run = async () => {
     })
   })
 
-  const basePath = handleBasePath(environments.basePath)
+  const basePath = handleBasePath(environments.apiBasePath)
 
   const serverAdapter: any = new ExpressAdapter()
   serverAdapter.setBasePath(basePath)
@@ -119,7 +120,7 @@ const run = async () => {
   console.log(`${queueBullMqList.map((queue) => `- ${queue.name}`).join('\n')}`)
   console.log('')
 
-  app.use('/', serverAdapter.getRouter())
+  app.use('/', morgan('short'), serverAdapter.getRouter())
 
   app.listen(environments.port, () => {
     console.log(`Running on ${environments.port}...`)
