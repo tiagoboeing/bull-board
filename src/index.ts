@@ -53,6 +53,7 @@ const run = async () => {
   )
 
   console.log('Configs')
+  console.log(`- Api base path: ${environments.apiBasePath}`)
   console.log(`- Prefix: ${environments.queuePrefix}`)
   console.log(`- Queues: ${environments.queueNames}`)
 
@@ -99,6 +100,7 @@ const run = async () => {
   })
 
   const basePath = handleBasePath(environments.apiBasePath)
+  console.log(`Base path: ${basePath}`)
 
   const serverAdapter: any = new ExpressAdapter()
   serverAdapter.setBasePath(basePath)
