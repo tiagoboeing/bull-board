@@ -21,7 +21,7 @@ const environments = {
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisUsername: process.env.REDIS_USERNAME || 'default',
   redisPassword: process.env.REDIS_PASSWORD || '',
-  apiBasePath: process.env.API_BASE_PATH || '/'
+  basePath: process.env.BASE_PATH || '/'
 }
 
 const redisOptions: ConnectionOptions = {
@@ -53,7 +53,7 @@ const run = async () => {
   )
 
   console.log('Configs')
-  console.log(`- Api base path: ${environments.apiBasePath}`)
+  console.log(`- Api base path: ${environments.basePath}`)
   console.log(`- Prefix: ${environments.queuePrefix}`)
   console.log(`- Queues: ${environments.queueNames}`)
 
@@ -99,7 +99,7 @@ const run = async () => {
     })
   })
 
-  const basePath = handleBasePath(environments.apiBasePath)
+  const basePath = handleBasePath(environments.basePath)
   console.log(`Base path: ${basePath}`)
 
   const serverAdapter: any = new ExpressAdapter()
