@@ -14,7 +14,8 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "resolveJsonModule": true,
-    "declaration": true
+    "declaration": true,
+    "strictNullChecks": true
   },
   "exclude": [
     "node_modules",
