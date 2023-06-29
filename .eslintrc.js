@@ -3,12 +3,24 @@ module.exports = {
     es2021: true,
     node: true
   },
-  extends: ['standard'],
-  parser: '@typescript-eslint/parser',
+  extends: 'standard-with-typescript',
+  overrides: [
+    {
+      env: {
+        node: true
+      },
+      files: [
+        '.eslintrc.{js,cjs}'
+      ],
+      parserOptions: {
+        sourceType: 'script'
+      }
+    }
+  ],
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: ['@typescript-eslint'],
-  rules: {}
+  rules: {
+  }
 }

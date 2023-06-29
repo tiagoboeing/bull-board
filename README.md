@@ -81,6 +81,22 @@ docker run \
 
 See this `const` with [all available environments](https://github.com/tiagoboeing/bull-board/blob/1895a9c0b201d56d17ae2864cfcc0810a9b25dd3/src/index.ts#L15).
 
+## Authentication
+
+You can enable a login page to protect your dashboard with a simple username and password.
+
+> This is a simple authentication, so take additional security measures if you need, something like restrict access to the dashboard only to internal IPs.
+
+**Declare the following environment variables:**
+
+```bash
+AUTH_REQUIRE=true
+AUTH_LOGIN=admin
+AUTH_PASSWORD=admin
+```
+
+> Default login is `bull` and password is `board`. By default authentication is disabled.
+
 ## Developing
 
 This project requires that you have a Redis instance running (you can simply run the `docker-compose.yml` to start the stack, use `npm run start:docker`).
