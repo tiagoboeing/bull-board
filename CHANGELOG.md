@@ -1,5 +1,13 @@
 
 
+## [1.2.0-0](https://github.com/tiagoboeing/bull-board/compare/v1.1.0-0...v1.2.0-0) (2023-06-29)
+
+
+### Features
+
+* :sparkles: Created environment to enable basic auth using login and password ([#3](https://github.com/tiagoboeing/bull-board/issues/3)) ([0b994f7](https://github.com/tiagoboeing/bull-board/commit/0b994f7fc5a78fccca6af30ce97faf0f0b15cf9b))
+* :stethoscope: Simple `/healthcheck` endpoint to be used on Kubernetes probes, like `liveness/readiness` ([#4](https://github.com/tiagoboeing/bull-board/issues/4)) ([3cda380](https://github.com/tiagoboeing/bull-board/commit/3cda380d17c2cd416934eef5aa83f7b15d4c2ef2))
+
 ## [1.1.0-0](https://github.com/tiagoboeing/bull-board/compare/v1.0.3-0...v1.1.0-0) (2023-04-27)
 
 
