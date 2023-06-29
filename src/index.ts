@@ -60,12 +60,17 @@ const createQueueMQ = (name: string): QueueMQ<any, any, string> =>
 
 const authMiddleware =
   () => (req: Request, _res: Response, next: NextFunction) => {
-    if (!environments.authRequire || req.path === '/healthcheck') {
+    if (!environments.authRequire || req.path.endsWith('/healthcheck')) {
       next()
       return
     }
 
-    ensureLoggedIn({ redirectTo: '/login' })(req, _res, next)
+    ensureLoggedIn({
+      redirectTo:
+        environments.basePath === '/'
+          ? '/login'
+          : `${environments.basePath}/login`
+    })(req, _res, next)
   }
 
 const run = async (): Promise<void> => {
