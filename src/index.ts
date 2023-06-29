@@ -1,17 +1,23 @@
+import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import {
   BullAdapter,
   BullMQAdapter,
   createBullBoard,
   ExpressAdapter
 } from '@bull-board/express'
+import styles from 'ansis'
+import bodyParser from 'body-parser'
 import Queue3 from 'bull'
 import { ConnectionOptions, Queue as QueueMQ } from 'bullmq'
-import express from 'express'
-import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
-import styles from 'ansis'
-import { splitQueueList } from './utils/split-queue-list/split-queue-list'
-import { handleBasePath } from './utils/base-path/base-path'
+import { ensureLoggedIn } from 'connect-ensure-login'
+import express, { NextFunction, Request, Response } from 'express'
+import session from 'express-session'
 import morgan from 'morgan'
+import passport from 'passport'
+import { Strategy } from 'passport-local'
+import path from 'path'
+import { handleBasePath } from './utils/base-path/base-path'
+import { splitQueueList } from './utils/split-queue-list/split-queue-list'
 
 const environments = {
   port: process.env.PORT || 4000,
@@ -21,7 +27,12 @@ const environments = {
   redisHost: process.env.REDIS_HOST || 'localhost',
   redisUsername: process.env.REDIS_USERNAME || 'default',
   redisPassword: process.env.REDIS_PASSWORD || '',
-  basePath: process.env.BASE_PATH || '/'
+  basePath: process.env.BASE_PATH || '/',
+
+  // auth
+  authRequire: process.env.AUTH_REQUIRE || false,
+  authLogin: process.env.AUTH_LOGIN || 'bull',
+  authPassword: process.env.AUTH_PASSWORD || 'board'
 }
 
 const redisOptions: ConnectionOptions = {
@@ -43,8 +54,16 @@ const createQueueMQ = (name: string) =>
     prefix: environments.queuePrefix
   })
 
+const authMiddleware =
+  () => (_req: Request, _res: Response, next: NextFunction) => {
+    if (!environments.authRequire) return next()
+
+    return ensureLoggedIn({ redirectTo: '/login' })(_req, _res, next)
+  }
+
 const run = async () => {
   console.log(styles.yellow('Starting Bull Board with: \n'))
+
   console.log('Redis')
   console.log(`- redis://${environments.redisHost}:${environments.redisPort}`)
   console.log(`- Username: ${environments.redisUsername}`)
@@ -53,9 +72,11 @@ const run = async () => {
   )
 
   console.log('Configs')
+  console.log(`- Auth required?: ${environments.authRequire}`)
   console.log(`- Api base path: ${environments.basePath}`)
   console.log(`- Prefix: ${environments.queuePrefix}`)
   console.log(`- Queues: ${environments.queueNames}`)
+  console.log('')
 
   const app = express()
 
@@ -122,7 +143,56 @@ const run = async () => {
   console.log(`${queueBullMqList.map((queue) => `- ${queue.name}`).join('\n')}`)
   console.log('')
 
-  app.use('/', morgan('short'), serverAdapter.getRouter())
+  if (environments.authRequire) {
+    passport.use(
+      new Strategy(function (username, password, cb) {
+        if (
+          username === environments.authLogin &&
+          password === environments.authPassword
+        ) {
+          return cb(null, { user: environments.authLogin })
+        }
+
+        return cb(null, false)
+      })
+    )
+
+    passport.serializeUser(function (user, done) {
+      done(null, user)
+    })
+
+    passport.deserializeUser(function (user, done) {
+      done(null, user)
+    })
+
+    // Configure view engine to render EJS templates.
+    app.set('views', path.join(__dirname, '/views'))
+    app.set('view engine', 'ejs')
+
+    app.use(
+      session({ secret: 'keyboard cat', saveUninitialized: true, resave: true })
+    )
+    app.use(passport.initialize({}))
+    app.use(passport.session())
+
+    app.use(bodyParser.urlencoded({ extended: false }))
+
+    app.get('/login', (req, res) => {
+      res.render('login', { invalid: req.query.invalid === 'true' })
+    })
+
+    app.post(
+      '/login',
+      passport.authenticate('local', {
+        failureRedirect: '/login?invalid=true'
+      }),
+      (_req, res) => {
+        res.redirect('/')
+      }
+    )
+  }
+
+  app.use('/', morgan('short'), authMiddleware(), serverAdapter.getRouter())
 
   app.listen(environments.port, () => {
     console.log(`Running on ${environments.port}...`)
