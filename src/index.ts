@@ -1,4 +1,4 @@
-import { BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
+import { type BaseAdapter } from '@bull-board/api/dist/src/queueAdapters/base'
 import {
   BullAdapter,
   BullMQAdapter,
@@ -8,9 +8,13 @@ import {
 import styles from 'ansis'
 import bodyParser from 'body-parser'
 import Queue3 from 'bull'
-import { ConnectionOptions, Queue as QueueMQ } from 'bullmq'
+import { type ConnectionOptions, Queue as QueueMQ } from 'bullmq'
 import { ensureLoggedIn } from 'connect-ensure-login'
-import express, { NextFunction, Request, Response } from 'express'
+import express, {
+  type NextFunction,
+  type Request,
+  type Response
+} from 'express'
 import session from 'express-session'
 import morgan from 'morgan'
 import passport from 'passport'
@@ -30,7 +34,7 @@ const environments = {
   basePath: process.env.BASE_PATH || '/',
 
   // auth
-  authRequire: process.env.AUTH_REQUIRE || false,
+  authRequire: process.env.AUTH_REQUIRE === 'true',
   authLogin: process.env.AUTH_LOGIN || 'bull',
   authPassword: process.env.AUTH_PASSWORD || 'board'
 }
@@ -42,26 +46,29 @@ const redisOptions: ConnectionOptions = {
   password: environments.redisPassword
 }
 
-const createQueue3 = (name: string) =>
+const createQueue3 = (name: string): Queue3.Queue<any> =>
   new Queue3(name, {
     redis: redisOptions,
     prefix: environments.queuePrefix
   })
 
-const createQueueMQ = (name: string) =>
+const createQueueMQ = (name: string): QueueMQ<any, any, string> =>
   new QueueMQ(name, {
     connection: redisOptions,
     prefix: environments.queuePrefix
   })
 
 const authMiddleware =
-  () => (_req: Request, _res: Response, next: NextFunction) => {
-    if (!environments.authRequire) return next()
+  () => (req: Request, _res: Response, next: NextFunction) => {
+    if (!environments.authRequire || req.path === '/healthcheck') {
+      next()
+      return
+    }
 
-    return ensureLoggedIn({ redirectTo: '/login' })(_req, _res, next)
+    ensureLoggedIn({ redirectTo: '/login' })(req, _res, next)
   }
 
-const run = async () => {
+const run = async (): Promise<void> => {
   console.log(styles.yellow('Starting Bull Board with: \n'))
 
   console.log('Redis')
@@ -72,16 +79,16 @@ const run = async () => {
   )
 
   console.log('Configs')
-  console.log(`- Auth required?: ${environments.authRequire}`)
+  console.log(`- Auth required?: ${String(environments.authRequire)}`)
   console.log(`- Api base path: ${environments.basePath}`)
-  console.log(`- Prefix: ${environments.queuePrefix}`)
+  console.log(`- Prefix: ${String(environments.queuePrefix)}`)
   console.log(`- Queues: ${environments.queueNames}`)
   console.log('')
 
   const app = express()
 
-  const queueBullList: Queue3.Queue<any>[] = []
-  const queueBullMqList: QueueMQ<any, any, string>[] = []
+  const queueBullList: Array<Queue3.Queue<any>> = []
+  const queueBullMqList: Array<QueueMQ<any, any, string>> = []
 
   const queuesList = splitQueueList(environments.queueNames)
 
@@ -108,12 +115,12 @@ const run = async () => {
     exampleBull.add({ title: req.query.title }, opts)
     exampleBullMq.add('Add', { title: req.query.title }, opts)
 
-    queueBullList.forEach((queue) =>
-      queue.add({ title: req.query.title }, opts)
-    )
-    queueBullMqList.forEach((queue) =>
-      queue.add('Add', { title: req.query.title }, opts)
-    )
+    queueBullList.forEach(async (queue) => {
+      await queue.add({ title: req.query.title }, opts)
+    })
+    queueBullMqList.forEach(async (queue) => {
+      await queue.add('Add', { title: req.query.title }, opts)
+    })
 
     res.json({
       ok: true
@@ -150,18 +157,19 @@ const run = async () => {
           username === environments.authLogin &&
           password === environments.authPassword
         ) {
-          return cb(null, { user: environments.authLogin })
+          cb(null, { user: environments.authLogin })
+          return
         }
 
-        return cb(null, false)
+        cb(null, false)
       })
     )
 
-    passport.serializeUser(function (user, done) {
+    passport.serializeUser(function (user: Express.User, done) {
       done(null, user)
     })
 
-    passport.deserializeUser(function (user, done) {
+    passport.deserializeUser(function (user: Express.User, done) {
       done(null, user)
     })
 
@@ -194,6 +202,10 @@ const run = async () => {
 
   app.use('/', morgan('short'), authMiddleware(), serverAdapter.getRouter())
 
+  app.use('/healthcheck', (_req, res) => {
+    res.send({ status: 'healthy' })
+  })
+
   app.listen(environments.port, () => {
     console.log(`Running on ${environments.port}...`)
     console.log(`For the UI, open http://localhost:${environments.port}`)
@@ -210,4 +222,6 @@ const run = async () => {
   })
 }
 
-run().catch((e) => console.error(e))
+run().catch((e) => {
+  console.error(e)
+})
