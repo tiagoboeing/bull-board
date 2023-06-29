@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Type of version to release"
+        description: 'Type of version to release'
         type: choice
         required: true
         options:
@@ -12,7 +12,7 @@ on:
           - minor
           - major
       pre_release:
-        description: "Is this a pre-release?"
+        description: 'Is this a pre-release?'
         type: boolean
         required: true
         default: false
@@ -45,19 +45,19 @@ jobs:
       - run: npm ci
 
       - name: Generate release
-        if: ${{ inputs.pre_release == 'false' }}
+        if: ${{ inputs.pre_release == false }}
         run: npm run release -- --ci ${{ inputs.version }}
 
       - name: Generate pre-release
-        if: ${{ inputs.pre_release != 'false' }}
+        if: ${{ inputs.pre_release == true }}
         run: npm run release -- --ci pre${{ inputs.version }}
 
       - name: Get generated version
         id: get_version
         uses: notiz-dev/github-action-json-property@release
         with:
-          path: "package.json"
-          prop_path: "version"
+          path: 'package.json'
+          prop_path: 'version'
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
