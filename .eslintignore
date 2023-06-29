@@ -2,3 +2,5 @@ node_modules
 static
 dist
 coverage
+**/*.test.ts
+**/*.spec.ts
