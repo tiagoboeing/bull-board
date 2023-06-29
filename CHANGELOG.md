@@ -1,5 +1,7 @@
 
 
+## [1.2.0](https://github.com/tiagoboeing/bull-board/compare/v1.2.0-0...v1.2.0) (2023-06-29)
+
 ## [1.2.0-0](https://github.com/tiagoboeing/bull-board/compare/v1.1.0-0...v1.2.0-0) (2023-06-29)
 
 
