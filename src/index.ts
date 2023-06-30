@@ -66,10 +66,7 @@ const authMiddleware =
     }
 
     ensureLoggedIn({
-      redirectTo:
-        environments.basePath === '/'
-          ? '/login'
-          : `${environments.basePath}/login`
+      redirectTo: handleRoutePath('/login', environments.basePath)
     })(req, _res, next)
   }
 
