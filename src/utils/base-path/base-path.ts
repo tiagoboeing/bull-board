@@ -5,3 +5,13 @@ export const handleBasePath = (path?: string): string => {
 
   return `/${path}`
 }
+
+export const handleRoutePath = (path: string, basePath?: string): string => {
+  const base = handleBasePath(basePath)
+
+  if (path.startsWith('/')) path = path.slice(1)
+
+  if (base === '/') return `/${path}`
+
+  return `${base}/${path}`
+}

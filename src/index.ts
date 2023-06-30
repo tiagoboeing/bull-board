@@ -20,7 +20,7 @@ import morgan from 'morgan'
 import passport from 'passport'
 import { Strategy } from 'passport-local'
 import path from 'path'
-import { handleBasePath } from './utils/base-path/base-path'
+import { handleBasePath, handleRoutePath } from './utils/base-path/base-path'
 import { splitQueueList } from './utils/split-queue-list/split-queue-list'
 
 const environments = {
@@ -179,7 +179,7 @@ const run = async (): Promise<void> => {
     })
 
     // Configure view engine to render EJS templates.
-    app.set('views', path.join(__dirname, '/views'))
+    app.set('views', path.resolve(__dirname, './views'))
     app.set('view engine', 'ejs')
 
     app.use(
@@ -190,12 +190,12 @@ const run = async (): Promise<void> => {
 
     app.use(bodyParser.urlencoded({ extended: false }))
 
-    app.get('/login', (req, res) => {
+    app.get(handleRoutePath('/login', environments.basePath), (req, res) => {
       res.render('login', { invalid: req.query.invalid === 'true' })
     })
 
     app.post(
-      '/login',
+      handleRoutePath('/login', environments.basePath),
       passport.authenticate('local', {
         failureRedirect: '/login?invalid=true'
       }),
