@@ -194,15 +194,23 @@ const run = async (): Promise<void> => {
     app.post(
       handleRoutePath('/login', environments.basePath),
       passport.authenticate('local', {
-        failureRedirect: '/login?invalid=true'
+        failureRedirect: `${handleRoutePath(
+          '/login',
+          environments.basePath
+        )}?invalid=true`
       }),
       (_req, res) => {
-        res.redirect('/')
+        res.redirect(handleBasePath(environments.basePath))
       }
     )
   }
 
-  app.use('/', morgan('short'), authMiddleware(), serverAdapter.getRouter())
+  app.use(
+    handleBasePath(environments.basePath),
+    morgan('short'),
+    authMiddleware(),
+    serverAdapter.getRouter()
+  )
 
   app.use('/healthcheck', (_req, res) => {
     res.send({ status: 'healthy' })
