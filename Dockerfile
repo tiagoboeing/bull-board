@@ -36,6 +36,7 @@ WORKDIR /app/
 
 COPY --chown=node:node --from=build /app/dist ./
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build /app/src/views ./views
 
 EXPOSE 4000
 

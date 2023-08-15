@@ -20,7 +20,7 @@ import morgan from 'morgan'
 import passport from 'passport'
 import { Strategy } from 'passport-local'
 import path from 'path'
-import { handleBasePath } from './utils/base-path/base-path'
+import { handleBasePath, handleRoutePath } from './utils/base-path/base-path'
 import { splitQueueList } from './utils/split-queue-list/split-queue-list'
 
 const environments = {
@@ -60,12 +60,14 @@ const createQueueMQ = (name: string): QueueMQ<any, any, string> =>
 
 const authMiddleware =
   () => (req: Request, _res: Response, next: NextFunction) => {
-    if (!environments.authRequire || req.path === '/healthcheck') {
+    if (!environments.authRequire || req.path.endsWith('/healthcheck')) {
       next()
       return
     }
 
-    ensureLoggedIn({ redirectTo: '/login' })(req, _res, next)
+    ensureLoggedIn({
+      redirectTo: handleRoutePath('/login', environments.basePath)
+    })(req, _res, next)
   }
 
 const run = async (): Promise<void> => {
@@ -174,7 +176,7 @@ const run = async (): Promise<void> => {
     })
 
     // Configure view engine to render EJS templates.
-    app.set('views', path.join(__dirname, '/views'))
+    app.set('views', path.resolve(__dirname, './views'))
     app.set('view engine', 'ejs')
 
     app.use(
@@ -185,22 +187,30 @@ const run = async (): Promise<void> => {
 
     app.use(bodyParser.urlencoded({ extended: false }))
 
-    app.get('/login', (req, res) => {
+    app.get(handleRoutePath('/login', environments.basePath), (req, res) => {
       res.render('login', { invalid: req.query.invalid === 'true' })
     })
 
     app.post(
-      '/login',
+      handleRoutePath('/login', environments.basePath),
       passport.authenticate('local', {
-        failureRedirect: '/login?invalid=true'
+        failureRedirect: `${handleRoutePath(
+          '/login',
+          environments.basePath
+        )}?invalid=true`
       }),
       (_req, res) => {
-        res.redirect('/')
+        res.redirect(handleBasePath(environments.basePath))
       }
     )
   }
 
-  app.use('/', morgan('short'), authMiddleware(), serverAdapter.getRouter())
+  app.use(
+    handleBasePath(environments.basePath),
+    morgan('short'),
+    authMiddleware(),
+    serverAdapter.getRouter()
+  )
 
   app.use('/healthcheck', (_req, res) => {
     res.send({ status: 'healthy' })

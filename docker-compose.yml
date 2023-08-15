@@ -21,6 +21,8 @@ services:
       QUEUE_NAMES: |
         ExampleBullMQ;
         ExampleBull
+      BASE_PATH: /bull
+      AUTH_REQUIRE: true
     networks:
       - app-network
     depends_on:
