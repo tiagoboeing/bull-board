@@ -1,5 +1,12 @@
 
 
+### [1.2.1](https://github.com/tiagoboeing/bull-board/compare/v1.2.0-0...v1.2.1) (2023-08-15)
+
+
+### Bug Fixes
+
+* :adhesive_bandage: Fixed redirect to login page when using `basePath` env ([#5](https://github.com/tiagoboeing/bull-board/issues/5)) ([699b858](https://github.com/tiagoboeing/bull-board/commit/699b858a8d615398a213dd2df4bc2315484a400e))
+
 ## [1.2.0](https://github.com/tiagoboeing/bull-board/compare/v1.2.0-0...v1.2.0) (2023-06-29)
 
 ## [1.2.0-0](https://github.com/tiagoboeing/bull-board/compare/v1.1.0-0...v1.2.0-0) (2023-06-29)
