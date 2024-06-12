@@ -79,7 +79,7 @@ docker run \
 
 ## Available variables
 
-See this `const` with [all available environments](https://github.com/tiagoboeing/bull-board/blob/1895a9c0b201d56d17ae2864cfcc0810a9b25dd3/src/index.ts#L15).
+See this `const` with [all available environments](https://github.com/tiagoboeing/bull-board/blob/master/src/index.ts#L26).
 
 ## Authentication
 
